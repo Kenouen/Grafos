@@ -240,8 +240,10 @@ class Grafo:
         :return: Lista contendo o DFS
         """
 
+
         lista = [vertice]
         self.controle(vertice, lista)
+
         return lista
 
 
@@ -297,42 +299,71 @@ class Grafo:
         else:
             return self.verifica_ciclo(aux[i][-1], ciclo, arestasVerificadas)
 
-
     def recursivaCaminho(self,d, lista, arestasverificadas, cont, n):
+        """
+        Função auxiliar da Função *caminho*, para processar recursivamente o vertice passado.
+        :param d: Vertice sendo processado;
+        :param lista: Lista final com o caminho;
+        :param arestasverificadas: lista de arestas ja verificadas pelo programa;
+        :param cont: contador para conferir quantas arestas ja estão no caminho;
+        :param n: Tamanho do caminho desejado;
+        :return: Retorna o maior caminho possivel achado.
+        """
         aux = self.seleciona_arestas(d)
         for i in aux.keys():
-            if i not in arestasverificadas and self.A[i][-1] not in lista:
-                lista.append(i)
-                lista.append(self.A[i][-1])
-                arestasverificadas.append(i)
-                cont +=1
-                return self.recursivaCaminho(self.A[i][-1], lista, arestasverificadas, cont, n)
+            if i not in arestasverificadas:
+                if aux[i][-1] not in lista:
+                    lista.append(i)
+                    lista.append(aux[i][-1])
+                    arestasverificadas.append(i)
+                    cont +=1
+                    return self.recursivaCaminho(aux[i][-1], lista, arestasverificadas, cont, n)
+                else:
+                    arestasverificadas.append(i)
+
         if cont >= n:
             return lista
+        if len(lista) == 0:
+            return False
         else:
-            if arestasverificadas == self.A:
+            if len(arestasverificadas) == len(self.A.keys()):
                 return False
             cont -= 1
             lista = lista[:-2]
             return self.recursivaCaminho(aux[i][-1], lista, arestasverificadas, cont, n)
 
     def caminho(self, n):
+        """
+        Função para descobrir um caminho de tamanho n.
+        :param n: Tamanho desejado do caminho;
+        :return: Lista contendo o caminho de tamanho n.
+        """
         for i in self.N:
             aux = [i]
             av = []
             cont = 0
             f = self.recursivaCaminho(i, aux, av, cont, n)
-            if not f:
-                print(f)
+            if f != False:
+                return f[:n+(n+1)]
+        return False
 
-
-
-
+    def conexo(self):
+        """
+        Função para verificar se o grafo é conexo.
+        :return:
+        """
+        aux = self.DFS(self.N[0])
+        cond = True
+        for i in self.N:
+            if i not in aux:
+                cond = False
+        return cond
 
 
 # =======================================================================================================================
 #                                            Funções auxiliares
 # =======================================================================================================================
+
     def seleciona_arestas(self, vetor):
 
         """
@@ -376,15 +407,15 @@ class Grafo:
         return grafo_str
 
 
-
 g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
                  {'a1':'J-C', 'a2':'C-E', 'a3':'C-E', 'a4':'C-P', 'a5':'C-P', 'a6':'C-M', 'a8':'M-T', 'a9':'T-Z'})
-
+print("ciclo grafo normal da paraiba")
 print(g_p.ha_ciclo())
 
 
 g_p_sem_paralelas = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'], {'a1': 'J-C', 'a3': 'C-E', 'a4': 'C-P', 'a6': 'Z-M','a8': 'M-T', 'a9': 'T-Z'})
 
+print("Ciclo grafo paraiba sem paralelas")
 print(g_p_sem_paralelas.ha_ciclo())
 grafo = Grafo(['A','B','C','D','E','F','G','H','I','J','K'],
               {'1':'A-B', '2':'A-G','3':'A-J','4':'G-K','5':'K-J',
@@ -392,6 +423,22 @@ grafo = Grafo(['A','B','C','D','E','F','G','H','I','J','K'],
               '11':'F-B','12':'B-G','13':'B-C','14':'C-D','15':'D-E',
               '16':'D-B','17':'B-E'})
 
+print("cilco grafo A-K")
 print(grafo.ha_ciclo())
 
-print(g_p.caminho(4))
+print("Caminho grafo sem paralelas")
+print(g_p_sem_paralelas.caminho(3))
+print(g_p.DFS("J"))
+
+
+Ze = Grafo(['A', 'B', 'C', 'D', 'E', 'F', 'H', 'G'], {'a1':'A-E', 'a2' : 'A-F', 'a3':'F-H', 'a4':'H-G', 'a5' : 'G-F', 'a6':'A-B', 'a7':'B-C', 'a8':'B-D', 'a9':'G-C'})
+
+print("ze DFS")
+print(Ze.DFS("A"))
+print("Ze ciclo")
+print(Ze.ha_ciclo())
+print("Ze Caminho 4")
+print(Ze.caminho(5))
+print("Ze conexo")
+print(Ze.conexo())
+print(g_p_sem_paralelas.conexo())
