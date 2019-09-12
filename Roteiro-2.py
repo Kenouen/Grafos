@@ -111,9 +111,29 @@ class Grafo:
         else:
             ArestaInvalidaException('A aresta ' + self.A[a] + ' é inválida')
 
+
 # =======================================================================================================================
 #                                            Funções auxiliares
 # =======================================================================================================================
+
+    def seleciona_arestas(self, vetor):
+
+        """
+        Função auxiliar que seleciona as arestas que incidem em um determinado vertice.
+        :param vetor: Vetor sendo analisado;
+        :return: Um Dicionario contendo as aresta que incidem no vertice.
+        """
+
+        aux = {}
+        for i in self.A.keys():
+            if vetor in self.A[i]:
+                if vetor == self.A[i][-1]:
+                    aux[i] = self.A[i][::-1]
+                else:
+                    aux[i] = self.A[i]
+        return aux
+
+
 
     def seleciona_arestas(self, vetor):
 
@@ -170,13 +190,12 @@ class Grafo:
 
 g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
                  {'a1':'J-C', 'a2':'C-E', 'a3':'C-E', 'a4':'C-P', 'a5':'C-P', 'a6':'C-M', 'a8':'M-T', 'a9':'T-Z'})
-print("DFS grafo normal da paraiba")
-print(g_p.DFS("Z"))
+
+Ze = Grafo(['A', 'B', 'C', 'D', 'E', 'F', 'H', 'G'], {'a1':'A-E', 'a2' : 'A-F', 'a3':'F-H', 'a4':'H-G', 'a5' : 'G-F', 'a6':'A-B', 'a7':'B-C', 'a8':'B-D', 'a9':'G-C'})
+
 
 g_p_sem_paralelas = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'], {'a1': 'J-C', 'a3': 'C-E', 'a4': 'C-P', 'a6': 'C-M','a8': 'M-T', 'a9': 'T-Z'})
 
-print("DFS grafo paraiba sem paralelas")
-print(g_p_sem_paralelas.DFS("J"))
 
 grafo = Grafo(['A','B','C','D','E','F','G','H','I','J','K'],
               {'1':'A-B', '2':'A-G','3':'A-J','4':'G-K','5':'K-J',
@@ -187,8 +206,11 @@ grafo = Grafo(['A','B','C','D','E','F','G','H','I','J','K'],
 print("DFS grafo A-K")
 print(grafo.DFS("A"))
 
-Ze = Grafo(['A', 'B', 'C', 'D', 'E', 'F', 'H', 'G'], {'a1':'A-E', 'a2' : 'A-F', 'a3':'F-H', 'a4':'H-G', 'a5' : 'G-F', 'a6':'A-B', 'a7':'B-C', 'a8':'B-D', 'a9':'G-C'})
-
 print("ze DFS")
 print(Ze.DFS("A"))
 
+print("DFS grafo normal da paraiba")
+print(g_p.DFS("Z"))
+
+print("DFS grafo paraiba sem paralelas")
+print(g_p_sem_paralelas.DFS("J"))
