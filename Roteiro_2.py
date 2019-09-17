@@ -116,24 +116,6 @@ class Grafo:
 #                                            Funções auxiliares
 # =======================================================================================================================
 
-    def seleciona_arestas(self, vetor):
-
-        """
-        Função auxiliar que seleciona as arestas que incidem em um determinado vertice.
-        :param vetor: Vetor sendo analisado;
-        :return: Um Dicionario contendo as aresta que incidem no vertice.
-        """
-
-        aux = {}
-        for i in self.A.keys():
-            if vetor in self.A[i]:
-                if vetor == self.A[i][-1]:
-                    aux[i] = self.A[i][::-1]
-                else:
-                    aux[i] = self.A[i]
-        return aux
-
-
 
     def seleciona_arestas(self, vetor):
 
@@ -151,11 +133,30 @@ class Grafo:
                 else:
                     aux[i] = self.A[i]
         return aux
+
+
+
+    def seleciona_arestas(self, vetor):
+
+        """
+        Função auxiliar que seleciona as arestas que incidem em um determinado vertice.
+        :param vetor: Vetor sendo analisado;
+        :return: Um Dicionario contendo as aresta que incidem no vertice.
+        """
+
+        aux = {}
+        for i in self.A.keys():
+            if vetor in self.A[i]:
+                if vetor == self.A[i][-1]:
+                    aux[i] = self.A[i][::-1]
+                else:
+                    aux[i] = self.A[i]
+        return aux
+
 
 #=======================================================================================================================
 #                                                       ROTEIRO 2
 #=======================================================================================================================
-
 
 
     def controle(self, d, lista):
