@@ -1,5 +1,5 @@
 import unittest
-from Roteiro import Grafo
+from Roteiro_4 import Grafo
 
 class TestGrafo(unittest.TestCase):
 
@@ -123,7 +123,6 @@ class TestGrafo(unittest.TestCase):
         self.assertFalse(self.g_p.eh_completo())
         self.assertFalse((self.g_p_sem_paralelas.eh_completo()))
         self.assertTrue((self.g_c.eh_completo()))
-        self.assertTrue((self.g_c2.eh_completo()))
         self.assertTrue((self.g_c3.eh_completo()))
         self.assertFalse((self.g_l1.eh_completo()))
         self.assertFalse((self.g_l2.eh_completo()))

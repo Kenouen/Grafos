@@ -1,5 +1,3 @@
-import unittest
-
 class VerticeInvalidoException(Exception):
     pass
 
@@ -35,6 +33,7 @@ class Grafo:
                 self.__maior_vertice = len(v)
 
         self.N = list(V)
+        self.quantVertices = len(self.N)
 
         if M == []:
             for k in range(len(V)):
@@ -246,17 +245,56 @@ class Grafo:
 
         return grafo_str
 
+# ======================================================================================================================
+#                                                       ROTEIRO 1
+# =======================================================================================================================
 
     def vertices_nao_adjacentes(self):
         lista = []
-        print(self.M)
-        for i in self.M:
-            for p in range(len(i)):
-                if i[p] == 0:
-                    lista.append("%s-%s"% (self.N[self.M.index(i)], self.N[p]))
+        for i in range(self.quantVertices):
+            for p in range(i, self.quantVertices):
+                if self.M[i][p] == 0:
+                    lista.append("%s-%s"% (self.N[i], self.N[p]))
         return lista
 
+    def ha_laco(self):
+        for i in range(self.quantVertices):
+            if self.M[i][i] >= 1:
+                return True
+        return False
 
-g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'], [[0, 1, 0, 0, 0, 0, 0], ['-', 0, 2, 2, 1, 1, 0], ['-', '-', 0, 0, 0, 0, 0], ['-', '-', '-', 0, 0, 0, 0], ['-', '-', '-', '-', 0, 1, 0], ['-', '-', '-', '-', '-', 0, 1], ['-', '-', '-', '-', '-', '-', 0]])
-print(g_p.vertices_nao_adjacentes())
-print(['J-J', 'J-E', 'J-P', 'J-M', 'J-T', 'J-Z', 'C-C', 'C-Z', 'E-E', 'E-P', 'E-M', 'E-T', 'E-Z', 'P-P', 'P-M', 'P-T', 'P-Z', 'M-M', 'M-Z', 'T-T', 'Z-Z'])
+    def grau(self, d):
+        aux = self.N.index(d)
+        soma = 0
+        for i in range(self.quantVertices):
+            if i > aux:
+                soma += self.M[aux][i]
+            elif i <= aux:
+                soma += self.M[i][aux]
+        return soma
+
+    def ha_paralelas(self):
+        for i in range(self.quantVertices):
+            for p in range(i, self.quantVertices):
+                if self.M[i][p] >= 2:
+                    return True
+        return False
+
+    def arestas_sobre_vertice(self, d):
+        lista = []
+        aux = self.N.index(d)
+        for i in range(self.quantVertices):
+            if i > aux:
+                if self.M[aux][i] >= 1:
+                    lista.append("%s-%s" % (self.N[aux], self.N[i]))
+            if i <= aux:
+                if self.M[i][aux] >= 1:
+                    lista.append("%s-%s" % (self.N[i], self.N[aux]))
+        return lista
+
+    def eh_completo(self):
+        for i in range(self.quantVertices):
+            for p in range(i+1, self.quantVertices):
+                if self.M[i][p] == 0:
+                    return False
+        return True
