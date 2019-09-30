@@ -306,6 +306,25 @@ class Grafo:
         return True
 
 
+# ======================================================================================================================
+#                                                       ROTEIRO 5
+# =======================================================================================================================
+
+
+    def recursivaEulier(self, d, av, caminho):
+        aux = []
+        for i in range(len(self.N)):
+            for p in range(len(self.N)):
+                if self.M[p][i]:
+
+
+    def eulier(self):
+        av = []
+        caminho = []
+        for i in self.N:
+
+
+
 g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
                  {'a1':'J-C', 'a2':'C-E', 'a3':'C-E', 'a4':'C-P', 'a5':'C-P', 'a6':'C-M', 'a8':'M-T', 'a9':'T-Z'})
 
