@@ -33,7 +33,6 @@ class Grafo:
                 self.__maior_vertice = len(v)
 
         self.N = list(V)
-        self.quantVertices = len(self.N)
         M = []
 
         for k in range(len(V)):
@@ -73,6 +72,9 @@ class Grafo:
 
         self.M = M
         self.len = len(self.N)
+        self.quantVertices = len(self.N)
+        self.perc = self.copy()
+
     def arestaValida(self, aresta=''):
         '''
         Verifica se uma aresta passada como parâmetro está dentro do padrão estabelecido.
@@ -255,20 +257,6 @@ class Grafo:
 #                                                       ROTEIRO 4
 # =======================================================================================================================
 
-    def vertices_nao_adjacentes(self):
-        lista = []
-        for i in range(self.quantVertices):
-            for p in range(i, self.quantVertices):
-                if self.M[i][p] == 0:
-                    lista.append("%s-%s"% (self.N[i], self.N[p]))
-        return lista
-
-    def ha_laco(self):
-        for i in range(self.quantVertices):
-            if self.M[i][i] >= 1:
-                return True
-        return False
-
     def grau(self, d):
         aux = self.N.index(d)
         soma = 0
@@ -279,13 +267,6 @@ class Grafo:
                 soma += self.M[i][aux]
         return soma
 
-    def ha_paralelas(self):
-        for i in range(self.quantVertices):
-            for p in range(i, self.quantVertices):
-                if self.M[i][p] >= 2:
-                    return True
-        return False
-
     def arestas_sobre_vertice(self, d):
         lista = []
         aux = self.N.index(d)
@@ -295,70 +276,58 @@ class Grafo:
                     lista.append("%s-%s" % (self.N[aux], self.N[i]))
             if i <= aux:
                 if self.M[i][aux] >= 1:
-                    lista.append("%s-%s" % (self.N[i], self.N[aux]))
+                    lista.append("%s-%s" % (self.N[aux], self.N[i]))
         return lista
 
-    def eh_completo(self):
-        for i in range(self.quantVertices):
-            for p in range(i+1, self.quantVertices):
-                if self.M[i][p] == 0:
-                    return False
+
+# ======================================================================================================================
+#                                                       ROTEIRO 5
+# ======================================================================================================================
+
+    def copy(self):
+        aux = []
+        for i in range(self.len):
+            for p in range(self.len):
+                aux[i][p] = self.M[i][p]
+        return aux
+
+    def dfsAux(self, d, lista):
+        aux = self.arestas_sobre_vertice(d)
+        for aresta in aux:
+            if aresta[-1] not in lista:
+                lista.append(aresta[-1])
+                self.dfsAux(aresta[-1], lista)
+
+    def dfs(self):
+        lista = [self.N[0]]
+        self.dfsAux(self.N[0], lista)
+        return lista
+
+    def conexo(self):
+        a = self.dfs()
+        for i in self.N:
+            if i not in a:
+                return False
         return True
 
-
-# ======================================================================================================================
-#                                                       ROTEIRO 5
-# =======================================================================================================================
-
-
-    def recursivaEuler(self, d, av, caminho):
-
-        for i in range(self.len):
-            for p in range(i, self.len):
-                if
-
-
-
-    def euler(self):
-        incid = []
-        for i in range(self.len):
-            cont = 0
-            for p in range(self.len):
-                try:
-                    if self.M[i][p] > 0:
-                        cont += self.M[i][p]
-                    elif self.M[p][i] > 0:
-                        cont += self.M[p][i]
-                except:
-                    continue
-
-            if cont % 2 != 0:
-                incid.append("I")
-            else:
-                incid.append("P")
-        cont = 0
-        for i in incid:
-            if i == 'I':
-                cont += 1
-
+    def pontes(self):
         aux = []
-        caminho = []
-        if cont == 2:
-            for i in range(self.len):
-                if incid[i] == "I":
-                    self.recursivaEuler(i, aux, caminho)
-        elif "I" not in incid:
-            for i in range(self.len):
-                self.recursivaEuler(i, aux, caminho)
-        else:
-            return False
-        return incid
+        for i in range(self.len):
+            for p in range(self.len):
+                m = self.copy()
+                if self.M[i][p] != '-' and self.M[i][p] > 0:
+                    self.M[i][p] -= 1
+                    if not self.conexo():
+                        aux.append([self.N[i], self.N[p]])
+        return aux
 
-# ======================================================================================================================
-#                                                       ROTEIRO 5
-# =======================================================================================================================
 
 g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
-                 {'a1':'J-C', 'a2':'C-E', 'a3':'C-E', 'a4':'C-P', 'a5':'C-P', 'a6':'C-M', 'a8':'M-T', 'a9':'T-Z'})
+                 {'a1': 'J-C', 'a2': 'C-E', 'a3': 'C-E', 'a4': 'C-P', 'a5': 'C-P', 'a6': 'C-M', 'a8': 'M-T', 'a9': 'T-Z'})
 
-print(g_p.euler())
+g = Grafo(['A', 'B', 'C', 'D'], {'a1': 'A-B', 'a2':'A-C', 'a3':'B-C', 'a4':'C-D'})
+
+print(g.pontes())
+
+
+print(g_p.conexo())
