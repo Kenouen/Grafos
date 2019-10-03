@@ -72,7 +72,7 @@ class Grafo:
                     raise ArestaInvalidaException('A aresta ' + aresta + ' é inválida')
 
         self.M = M
-
+        self.len = len(self.N)
     def arestaValida(self, aresta=''):
         '''
         Verifica se uma aresta passada como parâmetro está dentro do padrão estabelecido.
@@ -311,21 +311,54 @@ class Grafo:
 # =======================================================================================================================
 
 
-    def recursivaEulier(self, d, av, caminho):
+    def recursivaEuler(self, d, av, caminho):
+
+        for i in range(self.len):
+            for p in range(i, self.len):
+                if
+
+
+
+    def euler(self):
+        incid = []
+        for i in range(self.len):
+            cont = 0
+            for p in range(self.len):
+                try:
+                    if self.M[i][p] > 0:
+                        cont += self.M[i][p]
+                    elif self.M[p][i] > 0:
+                        cont += self.M[p][i]
+                except:
+                    continue
+
+            if cont % 2 != 0:
+                incid.append("I")
+            else:
+                incid.append("P")
+        cont = 0
+        for i in incid:
+            if i == 'I':
+                cont += 1
+
         aux = []
-        for i in range(len(self.N)):
-            for p in range(len(self.N)):
-                if self.M[p][i]:
-
-
-    def eulier(self):
-        av = []
         caminho = []
-        for i in self.N:
+        if cont == 2:
+            for i in range(self.len):
+                if incid[i] == "I":
+                    self.recursivaEuler(i, aux, caminho)
+        elif "I" not in incid:
+            for i in range(self.len):
+                self.recursivaEuler(i, aux, caminho)
+        else:
+            return False
+        return incid
 
-
+# ======================================================================================================================
+#                                                       ROTEIRO 5
+# =======================================================================================================================
 
 g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
                  {'a1':'J-C', 'a2':'C-E', 'a3':'C-E', 'a4':'C-P', 'a5':'C-P', 'a6':'C-M', 'a8':'M-T', 'a9':'T-Z'})
 
-print(g_p)
+print(g_p.euler())

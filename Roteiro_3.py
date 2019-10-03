@@ -315,7 +315,7 @@ class Grafo:
         else:
             return self.verifica_ciclo(aux[i][-1], ciclo, arestasVerificadas)
 
-    def recursivaCaminho(self,d, lista, arestasverificadas, cont, n):
+    def recursivaCaminho(self, d, lista, arestasverificadas, cont, n):
         """
         Função auxiliar da Função *caminho*, para processar recursivamente o vertice passado.
         :param d: Vertice sendo processado;
