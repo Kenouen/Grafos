@@ -73,7 +73,7 @@ class Grafo:
         self.M = M
         self.len = len(self.N)
         self.quantVertices = len(self.N)
-        self.perc = self.copy()
+        self.perc = self.copy(self.M)
 
     def arestaValida(self, aresta=''):
         '''
@@ -284,27 +284,28 @@ class Grafo:
 #                                                       ROTEIRO 5
 # ======================================================================================================================
 
-    def copy(self):
+    def copy(self, m):
         aux = []
         for i in range(self.len):
+            aux.append([])
             for p in range(self.len):
-                aux[i][p] = self.M[i][p]
+                aux[i].append(m[i][p])
         return aux
 
-    def dfsAux(self, d, lista):
+    def dfsAux(self, d, lista, arestasv):
         aux = self.arestas_sobre_vertice(d)
         for aresta in aux:
             if aresta[-1] not in lista:
                 lista.append(aresta[-1])
-                self.dfsAux(aresta[-1], lista)
+                self.dfsAux(aresta[-1], lista, arestasv)
 
-    def dfs(self):
-        lista = [self.N[0]]
-        self.dfsAux(self.N[0], lista)
+    def dfs(self, d):
+        lista = [d]
+        self.dfsAux(d, lista, [])
         return lista
 
-    def conexo(self):
-        a = self.dfs()
+    def conexo(self, inicio):
+        a = self.dfs(inicio)
         for i in self.N:
             if i not in a:
                 return False
@@ -314,20 +315,24 @@ class Grafo:
         aux = []
         for i in range(self.len):
             for p in range(self.len):
-                m = self.copy()
                 if self.M[i][p] != '-' and self.M[i][p] > 0:
+                    self.M = self.copy(self.perc)
                     self.M[i][p] -= 1
-                    if not self.conexo():
+                    if not self.conexo(self.N[p]):
                         aux.append([self.N[i], self.N[p]])
         return aux
 
+    def graus(self):
+
+    def euler(self):
+
 
 g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
-                 {'a1': 'J-C', 'a2': 'C-E', 'a3': 'C-E', 'a4': 'C-P', 'a5': 'C-P', 'a6': 'C-M', 'a8': 'M-T', 'a9': 'T-Z'})
+                 {'a1': 'J-C', 'a2': 'C-E', 'a3': 'C-E', 'a4': 'C-P', 'a5': 'C-P', 'a6': 'C-M','a7': 'C-T', 'a8': 'M-T', 'a9': 'T-Z'})
 
 g = Grafo(['A', 'B', 'C', 'D'], {'a1': 'A-B', 'a2':'A-C', 'a3':'B-C', 'a4':'C-D'})
 
 print(g.pontes())
 
 
-print(g_p.conexo())
+print(g_p.pontes())
