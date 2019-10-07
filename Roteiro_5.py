@@ -324,7 +324,47 @@ class Grafo:
 
     def graus(self):
 
+        aux = []
+        for i in self.N:
+            a = self.grau(i)
+            if a % 2 == 0:
+                aux.append("P")
+            else:
+                aux.append("I")
+        return aux
+
+    def escolhas_euler(self):
+        a = self.graus()
+        I = 0
+        for i in a:
+            if i == 'I':
+                I += 1
+
+        if I == 0:
+            return self.N
+        elif I == 2:
+            b = []
+            for i in range(self.len):
+                if a[i] == "I":
+                    b.append(self.N[i])
+            return b
+        else:
+            return []
+
+    def euler_rec(self, d, aux, pontes):
+        ai = self.arestas_sobre_vertice(self.N[d])
+        for i in ai:
+            self.M = self.copy(self.perc)
+            if i in pontes and len(ai) == 1:
+
+
     def euler(self):
+        aux = []
+
+        for i in self.escolhas_euler():
+            aux = [i]
+            self.euler_rec(i, aux, self.pontes())
+
 
 
 g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
@@ -332,7 +372,7 @@ g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
 
 g = Grafo(['A', 'B', 'C', 'D'], {'a1': 'A-B', 'a2':'A-C', 'a3':'B-C', 'a4':'C-D'})
 
-print(g.pontes())
+print(g.escolhas_euler())
 
 
 print(g_p.pontes())
