@@ -319,7 +319,8 @@ class Grafo:
                     self.M = self.copy(self.perc)
                     self.M[i][p] -= 1
                     if not self.conexo(self.N[p]):
-                        aux.append([self.N[i], self.N[p]])
+                        aux.append(["%s-%s" % (self.N[i], self.N[p])])
+        self.M = self.copy(self.perc)
         return aux
 
     def graus(self):
@@ -351,12 +352,27 @@ class Grafo:
         else:
             return []
 
-    def euler_rec(self, d, aux, pontes):
-        ai = self.arestas_sobre_vertice(self.N[d])
-        for i in ai:
-            self.M = self.copy(self.perc)
-            if i in pontes and len(ai) == 1:
+    def remover(self, aresta):
+        a = self.N.index(aresta[0])
+        b = self.N.index(aresta[-1])
+        if a <= b:
+            self.M[a][b] -= 1
+        else:
+            self.M[b][a] -= 1
 
+    def euler_rec(self, d, aux, pontes):
+        ai = self.arestas_sobre_vertice(d)
+        if len(ai) == 0:
+            return
+        aresta = ai[0]
+        if (aresta not in pontes) or (aresta in pontes and len(ai) == 1):
+            aux.append(aresta[-1])
+            ai.pop(0)
+            self.remover(aresta)
+            self.euler_rec(aux[-1], aux, pontes)
+
+        else:
+            ai[0], ai[-1] = ai[-1], ai[0]
 
     def euler(self):
         aux = []
@@ -364,15 +380,53 @@ class Grafo:
         for i in self.escolhas_euler():
             aux = [i]
             self.euler_rec(i, aux, self.pontes())
+            self.M = self.copy(self.perc)
+            if len(aux) == len(self.N):
+                break
+        if aux == []:
+            return False
+        return aux
+
+    def ciclo_hamilton_rec(self, d, lista):
+        aux = self.arestas_sobre_vertice(d)
+        for i in aux:
+            if i[-1] not in lista:
+                lista.append(i[-1])
+                self.ciclo_hamilton_rec(i[-1], lista)
+            elif i[-1] == lista[0] and len(lista) == self.quantVertices:
+                lista.append(i[-1])
+                break
+        if len(lista) == self.quantVertices+1:
+            return
+        else:
+            lista.pop(-1)
+
+    def ciclo_hamilton(self):
+        for i in self.N:
+            l = [i]
+            self.ciclo_hamilton_rec(i, l)
+            self.M = self.copy(self.perc)
+            if len(l) == self.quantVertices + 1:
+                return l
+        return False
+
+
+# ======================================================================================================================
+#                                                       Testes
+# ======================================================================================================================
 
 
 
 g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
                  {'a1': 'J-C', 'a2': 'C-E', 'a3': 'C-E', 'a4': 'C-P', 'a5': 'C-P', 'a6': 'C-M','a7': 'C-T', 'a8': 'M-T', 'a9': 'T-Z'})
 
-g = Grafo(['A', 'B', 'C', 'D'], {'a1': 'A-B', 'a2':'A-C', 'a3':'B-C', 'a4':'C-D'})
+g = Grafo(['A', 'B', 'C', 'D'], {'a1': 'A-B', 'a2':'A-D', 'a3':'B-C', 'a4':'C-D'})
 
-print(g.escolhas_euler())
+Ze = Grafo(['A', 'B', 'C', 'D', 'E', 'F', 'H', 'G'], {'a1':'A-E', 'a2' : 'A-F', 'a3':'F-H', 'a4':'H-G', 'a5' : 'G-F', 'a6':'A-B', 'a7':'B-C', 'a8':'B-D', 'a9':'G-C'})
+
+print(g.ciclo_hamilton())
+
+print(g.euler())
 
 
-print(g_p.pontes())
+print(Ze.euler())
