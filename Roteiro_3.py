@@ -86,7 +86,6 @@ class Grafo:
             for k in self.A:
                 if aresta == self.A[k]:
                     existe = True
-
         return existe
 
     def adicionaVertice(self, v):
