@@ -335,7 +335,6 @@ class Grafo:
                     return self.recursivaCaminho(aux[i][-1], lista, arestasverificadas, cont, n)
                 else:
                     arestasverificadas.append(i)
-
         if cont >= n:
             return lista
         if len(lista) == 0:
