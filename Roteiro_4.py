@@ -163,7 +163,6 @@ class Grafo:
                 for j in range(len(self.M)):
                     if self.M[self.__indice_primeiro_vertice_aresta(a)][self.__indice_segundo_vertice_aresta(a)]:
                         existe = True
-
         return existe
 
     def adicionaVertice(self, v):
