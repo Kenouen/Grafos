@@ -39,7 +39,7 @@ class Grafo:
             M.append(list())
             for l in range(len(V)):
                 M[k].append(0)
-
+        self.M = M
         for i in A.values():
             self.adicionaAresta(i)
 
@@ -56,8 +56,8 @@ class Grafo:
                 Verifica se os índices passados como parâmetro representam um elemento da matriz abaixo da diagonal principal.
                 Além disso, verifica se o referido elemento é um traço "-". Isso indica que a matriz é não direcionada e foi construída corretamente.
                 '''
-                if i>j and not(M[i][j] == '-'):
-                    raise MatrizInvalidaException('A matriz não representa uma matriz não direcionada')
+                # if i>j and not(M[i][j] == '-'):
+                #     raise MatrizInvalidaException('A matriz não representa uma matriz não direcionada')
 
                 aresta = V[i] + Grafo.SEPARADOR_ARESTA + V[j]
                 if not(self.arestaValida(aresta)):
@@ -171,6 +171,34 @@ class Grafo:
         else:
             raise ArestaInvalidaException('A aresta {} é inválida'.format(a))
 
+    def __str__(self):
+        '''
+        Fornece uma representação do tipo String do grafo.
+        O String contém um sequência dos vértices separados por vírgula, seguido de uma sequência das arestas no formato padrão.
+        :return: Uma string que representa o grafo
+        '''
+
+        # Dá o espaçamento correto de acordo com o tamanho do string do maior vértice
+        espaco = ' '*(self.__maior_vertice)
+
+        grafo_str = espaco + ' '
+
+        for v in range(len(self.N)):
+            grafo_str += self.N[v]
+            if v < (len(self.N) - 1):  # Só coloca o espaço se não for o último vértice
+                grafo_str += ' '
+
+        grafo_str += '\n'
+
+        for l in range(len(self.M)):
+            grafo_str += self.N[l] + ' '
+            for c in range(len(self.M)):
+                grafo_str += str(self.M[l][c]) + ' '
+            grafo_str += '\n'
+        return grafo_str
+
+
+
 # ======================================================================================================================
 #                                                       ROTEIRO 5
 # ======================================================================================================================
@@ -194,9 +222,37 @@ class Grafo:
                 if E[j][i] == 1:
                     for k in range(0, self.len):
                         E[j][k] = max(E[j][k], E[i][k])
-        return E
+
+        # Dá o espaçamento correto de acordo com o tamanho do string do maior vértice
+        espaco = ' ' * (self.__maior_vertice)
+
+        grafo_str = espaco + ' '
+
+        for v in range(len(self.N)):
+            grafo_str += self.N[v]
+            if v < (len(self.N) - 1):  # Só coloca o espaço se não for o último vértice
+                grafo_str += ' '
+
+        grafo_str += '\n'
+
+        for l in range(self.len):
+            grafo_str += self.N[l] + ' '
+            for c in range(len(E)):
+                grafo_str += str(E[l][c]) + ' '
+            grafo_str += '\n'
+        return grafo_str
 
 
-g = Grafo(['A', 'B', 'C', 'D'], {'a1': 'A-B', 'a2':'A-D', 'a3':'B-C', 'a4':'C-D'})
+# ======================================================================================================================
+#                                                       Testes
+# ======================================================================================================================
 
-print(g)
+
+g = Grafo(['A', 'B', 'C', 'D'], {'a1': 'A-B', 'a2':'A-C', 'a3':'B-C', 'a4':'C-D'})
+
+print(g.warshall())
+
+g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
+                 {'a1': 'J-C', 'a2': 'C-E', 'a3': 'E-C', 'a4': 'C-P', 'a5': 'P-C', 'a6': 'C-M','a7': 'T-C', 'a8': 'M-T', 'a9': 'T-Z'})
+
+print(g_p.warshall())
