@@ -143,22 +143,55 @@ class Grafo:
         return mapa
 
 
-    def Dijkstra(self, u, v):
+    def Dijkstra(self, w, v):
+        u = w
         dados = self.DijkstraHead()
         #dados[vertice] = [arestas, Fi, Beta, pi]
 
         fis = []
+        # fi de u vira 1
+        dados[u][1] = True
+
+        # Beta de u = 0
+        dados[u][2] = 0
 
         while u != v and len(fis) < self.len :
 
-            #fi de u vira 1
-            dados[u][1] = True
-
-            #Beta de u = 0
-            dados[u][2] = 0
-
             #Para todos os outros vértices 𝞫(r) ⇽ ∞, 𝞿(r) ⇽ 0, 𝞹(r) ⇽ 0 e w ⇽ u
-            for i in
+            for i in dados[u][0]:
+                if dados[i[-1]][2] >= dados[u][2] + 1:
+                    dados[i[-1]][2] = dados[u][2] + 1
+                    dados[i[-1]][3] = u
+
+
+            #Ache um vértice r* tal que 𝞿(r*)=0, 𝞫(r*)<∞ e 𝞫(r*)=min𝞿(r) = 0(𝞫(r))
+            menorcaminho = len(self.A.values()) + 1
+            menorvertice = ''
+            for i in dados.keys():
+                aux = dados[i]
+                if aux[1] == False and aux[2] < menorcaminho:
+                    menorcaminho = aux[2]
+                    menorvertice = i
+
+            #Faça 𝞿(r*) = 1 e w = r*
+
+            dados[menorvertice][1] = True
+            u = menorvertice
+            #Se r* não existe, não há caminho u-v e o algoritmo deve parar
+            if u == '':
+                break
+
+        aux = []
+        aux.append(v)
+        while v != w:
+            t = dados[v][3]
+            aux.append(t)
+            v = t
+
+        for i in aux[::-1]:
+            print(i,end=' ')
+            if(i != u):
+                print("-",end=' ')
 
 
 
@@ -174,4 +207,4 @@ class Grafo:
 g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
                  {'a1':'J-C', 'a2':'C-E', 'a3':'E-C', 'a4':'C-P', 'a5':'C-P', 'a6':'C-M', 'a8':'M-T', 'a9':'T-Z'})
 
-g_p.Dijkstra('J', 'Z')
+g_p.Dijkstra('C', 'Z')
