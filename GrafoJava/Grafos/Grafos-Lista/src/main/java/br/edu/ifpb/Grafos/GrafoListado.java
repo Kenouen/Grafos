@@ -22,14 +22,14 @@ public class GrafoListado extends Grafo {
         }
     }
 
-    private boolean adicionarVertice(String vertice){
+    public boolean adicionarVertice(String vertice){
         if (!verticeValido(vertice))return false;
         Vertice novo = new Vertice(vertice);
         this.Vertices.add(novo);
         return true;
     }
 
-    private boolean adicionarAresta(String aresta){
+    public boolean adicionarAresta(String aresta){
 
         String novo1 = String.format("%c", aresta.charAt(0));
         String novo2 = String.format("%c", aresta.charAt(aresta.length()-1));
