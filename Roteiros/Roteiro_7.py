@@ -137,18 +137,18 @@ class Grafo:
                 temp.append(i)
         return temp
 
-    def DijkstraHead(self):
+    def DijkstraHead(self, g):
         temp = self.remove_parallel()
         mapa = {}
         for i in self.N:
             arestas = self.arestas_sobre_vertice(i, temp)
-            mapa[i] = [arestas, False, len(self.A.values()) + 1, '']
+            mapa[i] = [arestas, False, len(self.A.values()) + 1, '', 0, g]
         return mapa
 
-    def Dijkstra(self, w, v, gasosa):
+    def Dijkstra(self, w, v, gasosa, postos):
         u = w
-        dados = self.DijkstraHead()
-        # dados[vertice] = [arestas, Fi, Beta, pi]
+        dados = self.DijkstraHead(gasosa)
+        # dados[vertice] = [arestas, Fi, Beta, pi, energy, limite de energia]
 
         fis = []
         # fi de u vira 1
@@ -156,38 +156,41 @@ class Grafo:
 
         # Beta de u = 0
         dados[u][2] = 0
-
+        dados[u][4] = gasosa
         while u != v and len(fis) < self.len:
 
             # Para todos os outros vértices 𝞫(r) ⇽ ∞, 𝞿(r) ⇽ 0, 𝞹(r) ⇽ 0 e w ⇽ u
             for i in dados[u][0]:
-                if dados[i[-1]][2] >= dados[u][2] + 1:
+                if dados[i[-1]][2] > dados[u][2] + 1:
                     dados[i[-1]][2] = dados[u][2] + 1
                     dados[i[-1]][3] = u
+                    dados[i[-1]][4] = dados[i[0]][4] - 1
 
             # Ache um vértice r* tal que 𝞿(r*)=0, 𝞫(r*)<∞ e 𝞫(r*)=min𝞿(r) = 0(𝞫(r))
             menorcaminho = len(self.A.values()) + 1
             menorvertice = ''
-            for i in dados.keys():
-                aux = dados[i]
-                if aux[1] == False and aux[2] < menorcaminho and gasosa >= 0:
+            for p in dados.keys():
+                aux = dados[p]
+                if aux[1] == False and aux[2] < menorcaminho and aux[4]-1 > 0:
                     menorcaminho = aux[2]
-                    menorvertice = i
+                    menorvertice = p
 
+            # Se r* não existe, não há caminho u-v e o algoritmo deve parar
+            if menorvertice == '':
+                break
             # Faça 𝞿(r*) = 1 e w = r*
 
             dados[menorvertice][1] = True
             u = menorvertice
-            gasosa -= 1
-            if u == "E":
-                gasosa = 5
-            # Se r* não existe, não há caminho u-v e o algoritmo deve parar
-            if u == '':
-                break
+            if u in postos:
+                dados[u][4] = 5
+
 
         aux = []
         aux.append(v)
         while v != w:
+            if v == '':
+                return False
             t = dados[v][3]
             aux.append(t)
             v = t
@@ -213,4 +216,4 @@ grafo = Grafo(['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','
                'a43': 'f-e', 'a44': 'e-d', 'a45': 'e-g'})
 
 
-grafo.Dijkstra('A', 'f', 3)
+grafo.Dijkstra('A', 'd', 3, ['I','R','X','f'])
