@@ -1,12 +1,15 @@
 import unittest
+
+
 class VerticeInvalidoException(Exception):
     pass
+
 
 class ArestaInvalidaException(Exception):
     pass
 
-class Grafo:
 
+class Grafo:
     QTDE_MAX_SEPARADOR = 1
     SEPARADOR_ARESTA = '-'
 
@@ -18,13 +21,13 @@ class Grafo:
         :param V: Uma dicionário que guarda as arestas do grafo. A chave representa o nome da aresta e o valor é uma string que contém dois vértices separados por um traço.
         '''
         for v in N:
-            if not(Grafo.verticeValido(v)):
+            if not (Grafo.verticeValido(v)):
                 raise VerticeInvalidoException('O vértice ' + v + ' é inválido')
 
         self.N = N
 
         for a in A:
-            if not(self.arestaValida(A[a])):
+            if not (self.arestaValida(A[a])):
                 raise ArestaInvalidaException('A aresta ' + A[a] + ' é inválida')
         self.len = len(N)
         self.A = A
@@ -53,7 +56,7 @@ class Grafo:
             return False
 
         # Verifica se as arestas antes de depois do elemento separador existem no Grafo
-        if not(self.existeVertice(aresta[:i_traco])) or not(self.existeVertice(aresta[i_traco+1:])):
+        if not (self.existeVertice(aresta[:i_traco])) or not (self.existeVertice(aresta[i_traco + 1:])):
             return False
 
         return True
@@ -142,11 +145,10 @@ class Grafo:
             mapa[i] = [arestas, False, len(self.A.values()) + 1, '']
         return mapa
 
-
     def Dijkstra(self, w, v, gasosa):
         u = w
         dados = self.DijkstraHead()
-        #dados[vertice] = [arestas, Fi, Beta, pi]
+        # dados[vertice] = [arestas, Fi, Beta, pi]
 
         fis = []
         # fi de u vira 1
@@ -157,14 +159,13 @@ class Grafo:
 
         while u != v and len(fis) < self.len:
 
-            #Para todos os outros vértices 𝞫(r) ⇽ ∞, 𝞿(r) ⇽ 0, 𝞹(r) ⇽ 0 e w ⇽ u
+            # Para todos os outros vértices 𝞫(r) ⇽ ∞, 𝞿(r) ⇽ 0, 𝞹(r) ⇽ 0 e w ⇽ u
             for i in dados[u][0]:
                 if dados[i[-1]][2] >= dados[u][2] + 1:
                     dados[i[-1]][2] = dados[u][2] + 1
                     dados[i[-1]][3] = u
 
-
-            #Ache um vértice r* tal que 𝞿(r*)=0, 𝞫(r*)<∞ e 𝞫(r*)=min𝞿(r) = 0(𝞫(r))
+            # Ache um vértice r* tal que 𝞿(r*)=0, 𝞫(r*)<∞ e 𝞫(r*)=min𝞿(r) = 0(𝞫(r))
             menorcaminho = len(self.A.values()) + 1
             menorvertice = ''
             for i in dados.keys():
@@ -173,14 +174,14 @@ class Grafo:
                     menorcaminho = aux[2]
                     menorvertice = i
 
-            #Faça 𝞿(r*) = 1 e w = r*
+            # Faça 𝞿(r*) = 1 e w = r*
 
             dados[menorvertice][1] = True
             u = menorvertice
             gasosa -= 1
             if u == "E":
                 gasosa = 5
-            #Se r* não existe, não há caminho u-v e o algoritmo deve parar
+            # Se r* não existe, não há caminho u-v e o algoritmo deve parar
             if u == '':
                 break
 
@@ -192,16 +193,24 @@ class Grafo:
             v = t
 
         for i in aux[::-1]:
-            print(i,end=' ')
-            if(i != u):
+            print(i, end=' ')
+            if (i != u):
                 print("-", end=' ')
 
 
+# g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
+#             {'a1': 'J-C', 'a2': 'C-E', 'a3': 'E-C', 'a4': 'C-P', 'a5': 'C-P', 'a6': 'C-M', 'a8': 'M-T', 'a9': 'T-Z'})
+#
+# g_p.Dijkstra('C', 'Z', 3)
 
-g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
-                 {'a1':'J-C', 'a2':'C-E', 'a3':'E-C', 'a4':'C-P', 'a5':'C-P', 'a6':'C-M', 'a8':'M-T', 'a9':'T-Z'})
+grafo = Grafo(['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','X','W','Y','Z','a','b','c','d','e','f','g'],
+              {'a0': 'A-B', 'a1': 'A-C', 'a2': 'A-D', 'a3': 'B-C', 'a4': 'B-E', 'a5': 'C-F', 'a6': 'D-H', 'a7': 'D-L',
+               'a8': 'E-I', 'a9': 'E-F', 'a10': 'F-G', 'a11': 'F-J', 'a12': 'F-K', 'a13': 'G-K', 'a14': 'G-D',
+               'a15': 'H-G', 'a16': 'I-M', 'a17': 'J-N', 'a18': 'K-L', 'a19': 'K-O', 'a20': 'L-P', 'a21': 'M-Q',
+               'a22': 'N-R', 'a23': 'O-R', 'a24': 'O-Q', 'a25': 'O-S', 'a26': 'P-R', 'a27': 'P-T', 'a28': 'R-U',
+               'a29': 'R-S', 'a30': 'S-W', 'a31': 'S-T', 'a32': 'T-X', 'a33': 'U-Y', 'a34': 'U-Z', 'a35': 'V-R',
+               'a36': 'W-V', 'a37': 'W-a', 'a38': 'W-b', 'a39': 'X-b', 'a40': 'X-c', 'a41': 'Z-e', 'a42': 'c-f',
+               'a43': 'f-e', 'a44': 'e-d', 'a45': 'e-g'})
 
-g_p.Dijkstra('C', 'Z', 3)
 
-
-grafo = Grafo(['A''B''C''D''E''F''G''H''I''J''K''L''M''N''O''P''Q''R''S''T''U''V''X''W''Y''Z''a''b''c''d''e''f'], { 'a0' : 'A-B','a1' : 'A-C','a2' : 'A-D','a3' : 'B-C','a4' : 'B-E','a5' : 'C-F','a6' : 'D-H','a7' : 'D-L','a8' : 'E-I','a9' : 'E-F','a10' : 'F-G','a11' : 'F-J','a12' : 'F-K','a13' : 'G-K','a14' : 'G-D','a15' : 'H-G','a16' : 'I-M','a17' : 'J-N','a18' : 'K-L','a19' : 'K-O','a20' : 'L-P', 'a21' : 'M-Q','a22' : 'N-R','a23' : 'O-R','a24' : 'O-Q','a25' : 'O-S','a26' : 'P-R','a27' : 'P-T','a28' : 'R-U','a29' : 'R-S','a30' : 'S-X','a31' : 'S-T','a32' : 'T-Y','a33' : 'U-W','a34' : 'U-Z','a35' : 'V-R','a36' : 'X-V','a37' : 'X-b','a38' : 'X-c','a39' : 'Y-c','a40' : 'Y-d','a41' : 'a-V','a42' : 'd-g','a43' : 'g-f','a44' : 'f-e','a45' : 'f-h'}]
+grafo.Dijkstra('A', 'f', 3)
