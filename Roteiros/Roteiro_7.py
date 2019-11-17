@@ -130,6 +130,10 @@ class Grafo:
                     arestas.append(i[::-1])
         return arestas
 
+# ======================================================================================================================
+#                                                       ROTEIRO 5
+# ======================================================================================================================
+
     def remove_parallel(self):
         temp = []
         for i in self.A.values():
@@ -137,17 +141,17 @@ class Grafo:
                 temp.append(i)
         return temp
 
-    def DijkstraHead(self, g):
+    def DijkstraHead(self):
         temp = self.remove_parallel()
         mapa = {}
         for i in self.N:
             arestas = self.arestas_sobre_vertice(i, temp)
-            mapa[i] = [arestas, False, len(self.A.values()) + 1, '', 0, g]
+            mapa[i] = [arestas, False, len(self.A.values()) + 1, '', 0]
         return mapa
 
     def Dijkstra(self, w, v, gasosa, postos):
         u = w
-        dados = self.DijkstraHead(gasosa)
+        dados = self.DijkstraHead()
         # dados[vertice] = [arestas, Fi, Beta, pi, energy, limite de energia]
 
         fis = []
@@ -169,9 +173,12 @@ class Grafo:
             # Ache um vértice r* tal que 𝞿(r*)=0, 𝞫(r*)<∞ e 𝞫(r*)=min𝞿(r) = 0(𝞫(r))
             menorcaminho = len(self.A.values()) + 1
             menorvertice = ''
+
             for p in dados.keys():
+                if p in postos:
+                    dados[p][4] = 5
                 aux = dados[p]
-                if aux[1] == False and aux[2] < menorcaminho and aux[4]-1 > 0:
+                if aux[1] == False and aux[2] < menorcaminho and aux[4]-1 >= 0:
                     menorcaminho = aux[2]
                     menorvertice = p
 
@@ -190,6 +197,7 @@ class Grafo:
         aux.append(v)
         while v != w:
             if v == '':
+                print("Nao a caminho possivel :(")
                 return False
             t = dados[v][3]
             aux.append(t)
@@ -199,12 +207,12 @@ class Grafo:
             print(i, end=' ')
             if (i != u):
                 print("-", end=' ')
+        print()
 
+# ======================================================================================================================
+#                                                       TESTE
+# ======================================================================================================================
 
-# g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
-#             {'a1': 'J-C', 'a2': 'C-E', 'a3': 'E-C', 'a4': 'C-P', 'a5': 'C-P', 'a6': 'C-M', 'a8': 'M-T', 'a9': 'T-Z'})
-#
-# g_p.Dijkstra('C', 'Z', 3)
 
 grafo = Grafo(['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','X','W','Y','Z','a','b','c','d','e','f','g'],
               {'a0': 'A-B', 'a1': 'A-C', 'a2': 'A-D', 'a3': 'B-C', 'a4': 'B-E', 'a5': 'C-F', 'a6': 'D-H', 'a7': 'D-L',
@@ -216,4 +224,12 @@ grafo = Grafo(['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','
                'a43': 'f-e', 'a44': 'e-d', 'a45': 'e-g'})
 
 
-grafo.Dijkstra('A', 'd', 3, ['I','R','X','f'])
+inicio = 'A'
+
+fim = 'd'
+
+pontos_de_recarga = ['I', 'R', 'X', 'f']
+
+energia_inicial = 3
+
+grafo.Dijkstra(inicio, fim, energia_inicial, pontos_de_recarga)
