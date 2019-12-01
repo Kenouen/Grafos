@@ -36,9 +36,9 @@ class Grafo:
         '''
         Verifica se uma aresta passada como parâmetro está dentro do padrão estabelecido.
         Uma aresta é representada por um string com o formato a-b, onde:
-        a é um substring de aresta que é o nome de um vértice adjacente à aresta.
+        a é um substring de aresta que é o nome de um vértice adjacente �  aresta.
         - é um caractere separador. Uma aresta só pode ter um único caractere como esse.
-        b é um substring de aresta que é o nome do outro vértice adjacente à aresta.
+        b é um substring de aresta que é o nome do outro vértice adjacente �  aresta.
         Além disso, uma aresta só é válida se conectar dois vértices existentes no grafo.
         :param aresta: A aresta que se quer verificar se está no formato correto.
         :return: Um valor booleano que indica se a aresta está no formato correto.
@@ -131,7 +131,7 @@ class Grafo:
         return arestas
 
 # ======================================================================================================================
-#                                                       ROTEIRO 5
+#                                                       ROTEIRO 7
 # ======================================================================================================================
 
     def remove_parallel(self):
