@@ -69,6 +69,7 @@ class Grafo:
 
         self.M = M
         self.len = len(self.N)
+        self.A = A
 
     def __str__(self):
         '''
@@ -164,6 +165,8 @@ class Grafo:
         matriz[self.N.index(inicio)][self.N.index(fim)] = self.M[self.N.index(inicio)][self.N.index(fim)]
 
     def prim_recurcivo(self, u, matriz):
+
+
         for i in self.arestas_sobre_vertice(u, matriz):
             if self.verticeNaArvore(i[-1], matriz):
                 self.adicionarAresta(u, i[-1], matriz)
@@ -171,6 +174,8 @@ class Grafo:
 
 
     def Prim(self, inicio):
+
+        #Função que inicia e implanta as variaveis necessarias para a recursividade de prim
 
         Matriz_temp = []
         for i in range(self.len):
@@ -184,6 +189,7 @@ class Grafo:
 
 
     def ModifiedPrim(self):
+        #Prim começando do vertice com menor peso
         menorEdge = ''
         menorgrau = float("inf")
         for i in self.N:
@@ -207,6 +213,59 @@ class Grafo:
             Matriz_temp.append([])
             for p in range(self.len):
                 Matriz_temp[i].append(0)
+
+
+        #separação e sort das arestas
+        lista = []
+        while len(lista) < len(self.A.values()):
+            maior = float("inf")
+            tmaior = []
+            for i in self.A.values():
+                if i[1] < maior and list(i) not in lista:
+                    maior = i[1]
+                    tmaior = list(i)
+
+            lista.append(tmaior)
+
+
+        #Raizes das arvores
+        Arvores = []
+        for i in self.N:
+            Arvores.append([i])
+
+
+
+        for i in lista:
+
+            for o in range(len(Arvores)):
+
+                if i[0][0] in Arvores[o]:
+                    break
+
+
+            for p in range(len(Arvores)):
+                if i[0][-1] in Arvores[p]:
+                    break
+
+
+
+            if o == p:
+                continue
+
+
+            for j in Arvores[p]:
+                Arvores[o].append(j)
+            Arvores[o].append(i)
+
+            del Arvores[p]
+
+        arestas = []
+        for i in Arvores[0]:
+
+            if len(i) > 1:
+                self.adicionarAresta(i[0][0], i[0][-1], Matriz_temp)
+
+        return self.tostring(Matriz_temp)
 
 
 
@@ -238,4 +297,4 @@ g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
             {'a1': ('J-C', 1), 'a2': ('C-E', 2), 'a3': ('C-E', 3), 'a4': ('C-P', 1), 'a5': ('C-P', 2),
              'a6': ('C-M', 3), 'a7': ('C-T', 2), 'a8': ('M-T', 1), 'a9': ('T-Z', 1)})
 
-print(g_p.ModifiedPrim())
+print(g_p.kruskall())
