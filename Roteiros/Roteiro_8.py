@@ -1,14 +1,16 @@
 class VerticeInvalidoException(Exception):
     pass
 
+
 class ArestaInvalidaException(Exception):
     pass
+
 
 class MatrizInvalidaException(Exception):
     pass
 
-class Grafo:
 
+class Grafo:
     QTDE_MAX_SEPARADOR = 1
     SEPARADOR_ARESTA = '-'
     __maior_vertice = 0
@@ -148,9 +150,9 @@ class Grafo:
                 soma += self.M[i][aux]
         return soma
 
-# ======================================================================================================================
-#                                                       ROTEIRO 8
-# ======================================================================================================================
+    # ======================================================================================================================
+    #                                                       ROTEIRO 8
+    # ======================================================================================================================
 
     def verticeNaArvore(self, ind, matriz):
 
@@ -166,16 +168,14 @@ class Grafo:
 
     def prim_recurcivo(self, u, matriz):
 
-
         for i in self.arestas_sobre_vertice(u, matriz):
             if self.verticeNaArvore(i[-1], matriz):
                 self.adicionarAresta(u, i[-1], matriz)
                 self.prim_recurcivo(i[-1], matriz)
 
-
     def Prim(self, inicio):
 
-        #Função que inicia e implanta as variaveis necessarias para a recursividade de prim
+        # Função que inicia e implanta as variaveis necessarias para a recursividade de prim
 
         Matriz_temp = []
         for i in range(self.len):
@@ -183,13 +183,11 @@ class Grafo:
             for p in range(self.len):
                 Matriz_temp[i].append(0)
 
-
         self.prim_recurcivo(inicio, Matriz_temp)
         return self.tostring(Matriz_temp)
 
-
     def ModifiedPrim(self):
-        #Prim começando do vertice com menor peso
+        # Prim começando do vertice com menor peso
         menorEdge = ''
         menorgrau = float("inf")
         for i in self.N:
@@ -203,9 +201,6 @@ class Grafo:
 
         return self.Prim(menorEdge)
 
-
-
-
     def kruskall(self):
 
         Matriz_temp = []
@@ -214,8 +209,7 @@ class Grafo:
             for p in range(self.len):
                 Matriz_temp[i].append(0)
 
-
-        #separação e sort das arestas
+        # separação e sort das arestas
         lista = []
         while len(lista) < len(self.A.values()):
             maior = float("inf")
@@ -227,13 +221,10 @@ class Grafo:
 
             lista.append(tmaior)
 
-
-        #Raizes das arvores
+        # Raizes das arvores
         Arvores = []
         for i in self.N:
             Arvores.append([i])
-
-
 
         for i in lista:
 
@@ -242,16 +233,12 @@ class Grafo:
                 if i[0][0] in Arvores[o]:
                     break
 
-
             for p in range(len(Arvores)):
                 if i[0][-1] in Arvores[p]:
                     break
 
-
-
             if o == p:
                 continue
-
 
             for j in Arvores[p]:
                 Arvores[o].append(j)
@@ -266,11 +253,6 @@ class Grafo:
                 self.adicionarAresta(i[0][0], i[0][-1], Matriz_temp)
 
         return self.tostring(Matriz_temp)
-
-
-
-
-
 
 
 # ======================================================================================================================
