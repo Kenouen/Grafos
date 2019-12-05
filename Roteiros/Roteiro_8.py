@@ -191,9 +191,15 @@ class Grafo:
     def prim_recurcivo(self, u, matriz):
 
         for i in self.arestas_fora_da_arvore(matriz):
+            menoraresta = ''
+            menorpeso = float("inf")
             if not self.verticeNaArvore(i[-1], matriz) and u == i[0]:
-                self.adicionarAresta(u, i[-1], matriz)
-                self.prim_recurcivo(i[-1], matriz)
+                peso = matriz[self.N.index(u)][self.N.index(i[-1])]
+                if peso < menorpeso:
+                    menorpeso = peso
+                    menoraresta = i
+                self.adicionarAresta(menoraresta[0], menoraresta[-1], matriz)
+                self.prim_recurcivo(menoraresta[-1], matriz)
 
     def Prim(self, inicio):
 
@@ -299,7 +305,7 @@ class Grafo:
 # grafo.Prim(inicio)
 
 g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
-            {'a1': ('J-C', 1), 'a2': ('C-E', 2), 'a3': ('C-E', 3), 'a4': ('C-P', 1), 'a5': ('C-P', 2),
+            {'a1': ('J-C', 1), 'a2': ('C-E', 5), 'a3': ('C-E', 2), 'a4': ('C-P', 1), 'a5': ('C-P', 2),
              'a6': ('C-M', 3), 'a7': ('C-T', 2), 'a8': ('M-T', 1), 'a9': ('T-Z', 1)})
 
 print(g_p.ModifiedPrim())
