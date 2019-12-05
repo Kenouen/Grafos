@@ -72,6 +72,7 @@ class Grafo:
         self.M = M
         self.len = len(self.N)
         self.A = A
+        self.Cond = True
 
     def __str__(self):
         '''
@@ -156,20 +157,41 @@ class Grafo:
 
     def verticeNaArvore(self, ind, matriz):
 
-        cond = True
+        cond = False
         for i in range(self.len):
             if matriz[i][self.N.index(ind)] > 0 or matriz[self.N.index(ind)][i] > 0:
-                cond = False
+                cond = True
         return cond
 
     def adicionarAresta(self, inicio, fim, matriz):
 
         matriz[self.N.index(inicio)][self.N.index(fim)] = self.M[self.N.index(inicio)][self.N.index(fim)]
 
+    def arestas_fora_da_arvore(self, matriz):
+        aux = []
+        for i in self.N:
+            if self.Cond:
+                self.Cond = False
+                for p in self.arestas_sobre_vertice(i, self.M):
+                    aux.append(p)
+                break
+            if self.verticeNaArvore(i, matriz):
+                for p in self.arestas_sobre_vertice(i, self.M):
+                    if not self.aresta_na_matriz(p, matriz):
+                        aux.append(p)
+        return aux
+
+    def aresta_na_matriz(self, i, matriz):
+        cond = False
+        if matriz[self.N.index(i[0])][self.N.index(i[-1])] > 0:
+            cond = True
+        return cond
+
+
     def prim_recurcivo(self, u, matriz):
 
-        for i in self.arestas_sobre_vertice(u, matriz):
-            if self.verticeNaArvore(i[-1], matriz):
+        for i in self.arestas_fora_da_arvore(matriz):
+            if not self.verticeNaArvore(i[-1], matriz) and u == i[0]:
                 self.adicionarAresta(u, i[-1], matriz)
                 self.prim_recurcivo(i[-1], matriz)
 
@@ -183,6 +205,7 @@ class Grafo:
             for p in range(self.len):
                 Matriz_temp[i].append(0)
 
+        self.Cond = True
         self.prim_recurcivo(inicio, Matriz_temp)
         return self.tostring(Matriz_temp)
 
@@ -279,4 +302,4 @@ g_p = Grafo(['J', 'C', 'E', 'P', 'M', 'T', 'Z'],
             {'a1': ('J-C', 1), 'a2': ('C-E', 2), 'a3': ('C-E', 3), 'a4': ('C-P', 1), 'a5': ('C-P', 2),
              'a6': ('C-M', 3), 'a7': ('C-T', 2), 'a8': ('M-T', 1), 'a9': ('T-Z', 1)})
 
-print(g_p.kruskall())
+print(g_p.ModifiedPrim())
